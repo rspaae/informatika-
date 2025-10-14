@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Pseudocode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #06b6d4;
+            --accent-dark: #0891b2;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --code-bg: #1e293b;
+        }
+
+        body {
+            background: var(--darker);
+            color: var(--light);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+            z-index: 10;
+        }
+
+        .slide-counter {
+            background: var(--primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Slides Container */
+        .slides-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        /* Slide-specific animations */
+        .slide[data-animation="fade"] {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .slide[data-animation="zoom"] {
+            animation: zoomIn 0.8s ease-out;
+        }
+
+        .slide[data-animation="slide-left"] {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .slide[data-animation="slide-right"] {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        /* Element animations */
+        .animate-float {
+            animation: gentleFloat 3s ease-in-out infinite;
+        }
+
+        .animate-card-reveal {
+            animation: cardReveal 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animate-typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end), blink 0.75s step-end infinite;
+            border-right: 2px solid var(--accent);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            animation: progressFill 1.5s ease-out forwards;
+            width: 0%;
+        }
+
+        /* Slide Content - LARGE VERSION */
+        .slide-content.large-content {
+            width: 98%;
+            height: 90%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 35px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            overflow-y: auto;
+        }
+
+        /* Slide Header */
+        .slide-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .slide-number {
+            background: var(--primary);
+            color: var(--light);
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 25px;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .slide-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            height: calc(100% - 100px);
+        }
+
+        /* Left Content */
+        .content-left {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .big-definition {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .big-definition h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .big-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--light);
+        }
+
+        .key-points h4 {
+            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .points-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .point-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .point-item i {
+            color: var(--accent);
+            font-size: 1.2rem;
+            width: 25px;
+        }
+
+        .point-item span {
+            font-size: 1.1rem;
+            color: var(--light);
+        }
+
+        /* Right Content */
+        .content-right {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .analogy-box {
+            background: rgba(6, 182, 212, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent);
+        }
+
+        .analogy-box h4 {
+            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .analogy-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        .analogy-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            color: var(--light);
+            font-weight: 500;
+        }
+
+        .step-arrow {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .live-example h4 {
+            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Purpose Section */
+        .purpose-main-intro {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 50px;
+        }
+
+        .purpose-main-intro h3 {
+            font-size: 2.2rem;
+            color: var(--light);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .intro-text {
+            font-size: 1.3rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .purpose-grid-large {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .purpose-card-large {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 20px;
+        }
+
+        .purpose-card-large:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .purpose-icon-large {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .purpose-content {
+            flex: 1;
+        }
+
+        .purpose-content h4 {
+            font-size: 1.4rem;
+            color: var(--light);
+            margin-bottom: 15px;
+        }
+
+        .purpose-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .benefit-point {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .benefit-point i {
+            color: var(--success);
+            font-size: 0.9rem;
+        }
+
+        .benefit-point span {
+            font-size: 1rem;
+            color: var(--light);
+        }
+
+        /* Keywords Section */
+        .keywords-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .keywords-intro h3 {
+            font-size: 2.2rem;
+            color: var(--light);
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .keywords-intro p {
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+
+        .keywords-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .keyword-category-large {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .category-header i {
+            font-size: 1.5rem;
+        }
+
+        .category-header h4 {
+            font-size: 1.3rem;
+        }
+
+        .keyword-list-large {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .keyword-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .keyword-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(5px);
+        }
+
+        .keyword-tag-large {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 1rem;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .keyword-desc {
+            color: var(--light);
+            font-size: 1rem;
+            flex: 1;
+        }
+
+        .keyword-example {
+            margin-top: 30px;
+        }
+
+        .keyword-example h4 {
+            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Code Blocks - LARGER SIZES */
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow-x: auto;
+        }
+
+        .code-block.large-code {
+            font-size: 1.1rem;
+        }
+
+        .code-block.x-large-code {
+            font-size: 1.15rem;
+            padding: 30px;
+        }
+
+        .code-block.medium-code {
+            font-size: 1rem;
+            padding: 20px;
+        }
+
+        /* Code Syntax */
+        .keyword {
+            color: #ff79c6;
+            font-weight: 600;
+        }
+
+        .comment {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .variable {
+            color: #50fa7b;
+        }
+
+        .function {
+            color: #8be9fd;
+        }
+
+        /* Writing Structure */
+        .writing-structure h3 {
+            font-size: 2rem;
+            color: var(--light);
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .structure-steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .structure-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-number-large {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1.3rem;
+            color: var(--light);
+            margin-bottom: 10px;
+        }
+
+        .step-content p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .complete-example {
+            margin-top: 40px;
+        }
+
+        .complete-example h4 {
+            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Control Structures */
+        .control-structures-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .control-structures-intro h3 {
+            font-size: 2rem;
+            color: var(--light);
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .control-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .control-type {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            color: var(--accent);
+        }
+
+        .control-header i {
+            font-size: 1.8rem;
+        }
+
+        .control-header h4 {
+            font-size: 1.5rem;
+        }
+
+        .control-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .example h5 {
+            color: var(--light);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Simple Examples */
+        .simple-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .simple-intro h3 {
+            font-size: 2rem;
+            color: var(--light);
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .simple-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            margin-bottom: 40px;
+        }
+
+        .example-project h4 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Conclusion Section */
+        .conclusion-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .conclusion-section h3 {
+            font-size: 2.2rem;
+            color: var(--light);
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .conclusion-section p {
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .conclusion-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .conclusion-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .conclusion-icon {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 20px;
+        }
+
+        .conclusion-card h4 {
+            font-size: 1.3rem;
+            color: var(--light);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .conclusion-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        /* Closing Section */
+        .closing-section {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .closing-section h3 {
+            font-size: 2.5rem;
+            color: var(--light);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .closing-section p {
+            font-size: 1.3rem;
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .thank-you {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-top: 40px;
+            font-weight: 600;
+        }
+
+        /* Interactive Elements */
+        .interactive-element {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .floating-code {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: var(--accent);
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+            pointer-events: none;
+        }
+
+        .pulse-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 3s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        .slide-indicators {
+            display: flex;
+            gap: 10px;
+        }
+
+        .slide-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #475569;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-indicator.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        .slide-indicator:hover {
+            background: var(--primary);
+        }
+
+        /* Scrollbar */
+        .slide-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(100px, 0) rotate(180deg);
+            }
+            75% {
+                transform: translate(50px, -50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.5);
+            }
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        @keyframes progressFill {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content,
+            .purpose-grid-large,
+            .keywords-section,
+            .structure-steps,
+            .control-types,
+            .conclusion-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .slide-content.large-content {
+                padding: 25px;
+            }
+            
+            .slide-header h2 {
+                font-size: 2rem;
+            }
+            
+            .big-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .slide {
+                padding: 10px;
+            }
+            
+            .slide-content.large-content {
+                padding: 20px;
+                height: 85%;
+            }
+            
+            .slide-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .slide-number {
+                margin-right: 0;
+            }
+            
+            .nav-btn {
+                min-width: 120px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .code-block.x-large-code {
+                font-size: 0.9rem;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- Floating interactive elements -->
+    <div id="floating-elements"></div>
+    
+    <div class="presentation-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="slide-counter">
+                <span id="current-slide">1</span>/<span id="total-slides">8</span>
+            </div>
+            <h1><i class="fas fa-code"></i> Presentasi Pseudocode</h1>
+            <div class="controls">
+                <button class="control-btn" id="fullscreen-btn" title="Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slides Container -->
+        <div class="slides-container">
+            <!-- Slide 1: Pengertian Pseudocode -->
+            <div class="slide active" id="slide1">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">01</div>
+                        <h2>Pengertian Pseudocode</h2>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="content-left">
+                            <div class="big-definition">
+                                <h3>Apa itu Pseudocode?</h3>
+                                <p class="big-text">
+                                    <strong>Pseudocode</strong> adalah cara menulis algoritma menggunakan bahasa yang mirip kode program, namun lebih mudah dipahami manusia karena tidak terikat sintaks bahasa pemrograman tertentu.
+                                </p>
+                            </div>
+
+                            <div class="key-points">
+                                <h4>Karakteristik Utama:</h4>
+                                <div class="points-grid">
+                                    <div class="point-item">
+                                        <i class="fas fa-language"></i>
+                                        <span>Bahasa informal yang mudah dibaca</span>
+                                    </div>
+                                    <div class="point-item">
+                                        <i class="fas fa-brain"></i>
+                                        <span>Fokus pada logika, bukan sintaks</span>
+                                    </div>
+                                    <div class="point-item">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        <span>Dapat diterjemahkan ke berbagai bahasa pemrograman</span>
+                                    </div>
+                                    <div class="point-item">
+                                        <i class="fas fa-project-diagram"></i>
+                                        <span>Digunakan untuk merencanakan solusi sebelum coding</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-right">
+                            <div class="analogy-box">
+                                <h4><i class="fas fa-lightbulb"></i> Analogi Mudah</h4>
+                                <p class="analogy-text">
+                                    Seperti membuat <strong>blueprint</strong> sebelum membangun rumah - pseudocode adalah rencana detail sebelum menulis kode aktual.
+                                </p>
+                                <div class="analogy-visual">
+                                    <div class="step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-text">Ide & Konsep</div>
+                                    </div>
+                                    <div class="step-arrow">→</div>
+                                    <div class="step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-text">Pseudocode</div>
+                                    </div>
+                                    <div class="step-arrow">→</div>
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-text">Kode Program</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="live-example">
+                                <h4><i class="fas fa-code"></i> Contoh Langsung</h4>
+                                <div class="code-block large-code">
+                                    <span class="comment">// Program menyapa pengguna</span><br>
+                                    <span class="keyword">BEGIN</span><br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> nama<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> nama != "" <span class="keyword">THEN</span><br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Halo, " + nama<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">ELSE</span><br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Nama tidak boleh kosong!"<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                                    <span class="keyword">END</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Tujuan Pseudocode -->
+            <div class="slide" id="slide2" data-animation="fade">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">02</div>
+                        <h2>Tujuan Pseudocode</h2>
+                    </div>
+
+                    <div class="purpose-main-intro">
+                        <h3>Mengapa Pseudocode Sangat Penting dalam Programming?</h3>
+                        <p class="intro-text">Pseudocode membantu programmer dalam berbagai aspek pengembangan software dengan menyediakan fondasi yang kuat sebelum menulis kode aktual.</p>
+                    </div>
+
+                    <div class="purpose-grid-large">
+                        <div class="purpose-card-large">
+                            <div class="purpose-icon-large">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <div class="purpose-content">
+                                <h4>Perencanaan Algoritma</h4>
+                                <p class="purpose-description">
+                                    Membantu merancang solusi yang tepat sebelum implementasi coding, mengurangi kemungkinan kesalahan logika dan memastikan alur program sudah benar dari awal.
+                                </p>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Mencegah kesalahan logika sejak dini</span>
+                                </div>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Memastikan alur program sudah optimal</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="purpose-card-large">
+                            <div class="purpose-icon-large">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="purpose-content">
+                                <h4>Komunikasi Tim</h4>
+                                <p class="purpose-description">
+                                    Memudahkan diskusi antar developer tentang logika program tanpa terikat bahasa pemrograman tertentu. Semua anggota tim dapat memahami alur program dengan mudah.
+                                </p>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Bahasa universal untuk diskusi teknis</span>
+                                </div>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Memudahkan kolaborasi dalam tim</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="purpose-card-large">
+                            <div class="purpose-icon-large">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="purpose-content">
+                                <h4>Dokumentasi</h4>
+                                <p class="purpose-description">
+                                    Menjadi dokumentasi awal yang jelas untuk kode yang akan ditulis, memudahkan maintenance dan pengembangan fitur di masa depan.
+                                </p>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Referensi untuk developer baru</span>
+                                </div>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Memudahkan debugging dan maintenance</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="purpose-card-large">
+                            <div class="purpose-icon-large">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div class="purpose-content">
+                                <h4>Debugging</h4>
+                                <p class="purpose-description">
+                                    Memudahkan identifikasi kesalahan logika sebelum menulis kode aktual, menghemat waktu dan effort dalam proses development.
+                                </p>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Menemukan bug lebih cepat</span>
+                                </div>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Mengurangi waktu debugging</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="purpose-card-large">
+                            <div class="purpose-icon-large">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="purpose-content">
+                                <h4>Pembelajaran</h4>
+                                <p class="purpose-description">
+                                    Membantu pemula memahami konsep pemrograman dan algoritma tanpa terbebani dengan sintaks bahasa pemrograman yang kompleks.
+                                </p>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Memahami logika programming dengan mudah</span>
+                                </div>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Foundation yang kuat untuk belajar coding</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="purpose-card-large">
+                            <div class="purpose-icon-large">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <div class="purpose-content">
+                                <h4>Portabilitas</h4>
+                                <p class="purpose-description">
+                                    Dapat dengan mudah diterjemahkan ke berbagai bahasa pemrograman, membuatnya sangat fleksibel untuk proyek multi-platform.
+                                </p>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Dapat digunakan di berbagai bahasa programming</span>
+                                </div>
+                                <div class="benefit-point">
+                                    <i class="fas fa-check"></i>
+                                    <span>Mudah diadaptasi untuk proyek berbeda</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Mengenal Kata Kunci -->
+            <div class="slide" id="slide3" data-animation="zoom">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">03</div>
+                        <h2>Mengenal Kata Kunci</h2>
+                    </div>
+
+                    <div class="keywords-intro">
+                        <h3>Kata Kunci Umum dalam Pseudocode</h3>
+                        <p>Kata kunci ini digunakan untuk merepresentasikan struktur dasar pemrograman dalam format yang mudah dipahami.</p>
+                    </div>
+
+                    <div class="keywords-section">
+                        <div class="keyword-category-large">
+                            <div class="category-header">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <h4>Input & Output</h4>
+                            </div>
+                            <div class="keyword-list-large">
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">INPUT</span>
+                                    <span class="keyword-desc">Menerima data dari pengguna</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">READ</span>
+                                    <span class="keyword-desc">Membaca data dari sumber</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">PRINT</span>
+                                    <span class="keyword-desc">Menampilkan output</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">DISPLAY</span>
+                                    <span class="keyword-desc">Menampilkan informasi</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">OUTPUT</span>
+                                    <span class="keyword-desc">Mengeluarkan hasil</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="keyword-category-large">
+                            <div class="category-header">
+                                <i class="fas fa-code-branch"></i>
+                                <h4>Struktur Kontrol</h4>
+                            </div>
+                            <div class="keyword-list-large">
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">IF</span>
+                                    <span class="keyword-desc">Percabangan kondisi</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">ELSE</span>
+                                    <span class="keyword-desc">Alternatif kondisi</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">WHILE</span>
+                                    <span class="keyword-desc">Perulangan dengan kondisi</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">FOR</span>
+                                    <span class="keyword-desc">Perulangan terhitung</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">CASE</span>
+                                    <span class="keyword-desc">Seleksi multi-kondisi</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="keyword-category-large">
+                            <div class="category-header">
+                                <i class="fas fa-cogs"></i>
+                                <h4>Operasi & Fungsi</h4>
+                            </div>
+                            <div class="keyword-list-large">
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">SET</span>
+                                    <span class="keyword-desc">Memberi nilai variabel</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">CALCULATE</span>
+                                    <span class="keyword-desc">Melakukan perhitungan</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">RETURN</span>
+                                    <span class="keyword-desc">Mengembalikan nilai</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">CALL</span>
+                                    <span class="keyword-desc">Memanggil fungsi/prosedur</span>
+                                </div>
+                                <div class="keyword-item">
+                                    <span class="keyword-tag-large">BEGIN/END</span>
+                                    <span class="keyword-desc">Awal dan akhir program</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="keyword-example">
+                        <h4><i class="fas fa-code"></i> Contoh Penggunaan Kata Kunci</h4>
+                        <div class="code-block x-large-code">
+                            <span class="comment">// Program menghitung luas persegi panjang</span><br>
+                            <span class="keyword">BEGIN</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> panjang<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> lebar<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SET</span> luas = panjang * lebar<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Luas persegi panjang: " + luas<br>
+                            <span class="keyword">END</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Struktur Penulisan -->
+            <div class="slide" id="slide4">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">04</div>
+                        <h2>Struktur Penulisan</h2>
+                    </div>
+
+                    <div class="writing-structure">
+                        <h3>Bagaimana Menulis Pseudocode yang Baik?</h3>
+                        
+                        <div class="structure-steps">
+                            <div class="structure-step">
+                                <div class="step-number-large">1</div>
+                                <div class="step-content">
+                                    <h4>Mulai dengan Tujuan</h4>
+                                    <p>Tentukan apa yang ingin dicapai oleh program. Tulis deskripsi singkat tentang fungsi program di bagian atas.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-step">
+                                <div class="step-number-large">2</div>
+                                <div class="step-content">
+                                    <h4>Gunakan Kata Kunci Standar</h4>
+                                    <p>Gunakan kata kunci seperti INPUT, PRINT, IF, WHILE, FOR yang sudah dikenal secara universal.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-step">
+                                <div class="step-number-large">3</div>
+                                <div class="step-content">
+                                    <h4>Tulis Secara Berurutan</h4>
+                                    <p>Urutkan langkah-langkah secara logis dari awal hingga akhir program.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-step">
+                                <div class="step-number-large">4</div>
+                                <div class="step-content">
+                                    <h4>Indentasi untuk Kejelasan</h4>
+                                    <p>Gunakan indentasi untuk menunjukkan blok kode seperti dalam percabangan dan perulangan.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-step">
+                                <div class="step-number-large">5</div>
+                                <div class="step-content">
+                                    <h4>Berikan Komentar</h4>
+                                    <p>Tambahkan komentar untuk menjelaskan bagian yang kompleks atau tidak jelas.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-step">
+                                <div class="step-number-large">6</div>
+                                <div class="step-content">
+                                    <h4>Review dan Perbaiki</h4>
+                                    <p>Baca ulang pseudocode untuk memastikan logikanya benar dan mudah dipahami.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="complete-example">
+                            <h4><i class="fas fa-code"></i> Contoh Lengkap Pseudocode</h4>
+                            <div class="code-block x-large-code">
+                                <span class="comment">// Program menentukan bilangan genap atau ganjil</span><br>
+                                <span class="keyword">BEGIN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> bilangan<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> bilangan MOD 2 = 0 <span class="keyword">THEN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> bilangan + " adalah bilangan genap"<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">ELSE</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> bilangan + " adalah bilangan ganjil"<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                                <span class="keyword">END</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Struktur Kontrol -->
+            <div class="slide" id="slide5">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">05</div>
+                        <h2>Struktur Kontrol</h2>
+                    </div>
+
+                    <div class="control-structures-intro">
+                        <h3>Struktur Kontrol dalam Pseudocode</h3>
+                        <p>Struktur kontrol menentukan alur eksekusi program berdasarkan kondisi tertentu.</p>
+                    </div>
+
+                    <div class="control-types">
+                        <div class="control-type">
+                            <div class="control-header">
+                                <i class="fas fa-code-branch"></i>
+                                <h4>Percabangan (Conditional)</h4>
+                            </div>
+                            <div class="control-examples">
+                                <div class="example">
+                                    <h5>IF-ELSE</h5>
+                                    <div class="code-block medium-code">
+                                        <span class="keyword">IF</span> kondisi <span class="keyword">THEN</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// kode jika kondisi benar</span><br>
+                                        <span class="keyword">ELSE</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// kode jika kondisi salah</span><br>
+                                        <span class="keyword">END IF</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="example">
+                                    <h5>CASE/SWITCH</h5>
+                                    <div class="code-block medium-code">
+                                        <span class="keyword">CASE</span> variabel <span class="keyword">OF</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;nilai1: <span class="comment">// kode untuk nilai1</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;nilai2: <span class="comment">// kode untuk nilai2</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">DEFAULT</span>: <span class="comment">// kode default</span><br>
+                                        <span class="keyword">END CASE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-type">
+                            <div class="control-header">
+                                <i class="fas fa-redo"></i>
+                                <h4>Perulangan (Loops)</h4>
+                            </div>
+                            <div class="control-examples">
+                                <div class="example">
+                                    <h5>WHILE Loop</h5>
+                                    <div class="code-block medium-code">
+                                        <span class="keyword">WHILE</span> kondisi <span class="keyword">DO</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// kode yang diulang</span><br>
+                                        <span class="keyword">END WHILE</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="example">
+                                    <h5>FOR Loop</h5>
+                                    <div class="code-block medium-code">
+                                        <span class="keyword">FOR</span> i = 1 <span class="keyword">TO</span> 10 <span class="keyword">DO</span><br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// kode yang diulang 10 kali</span><br>
+                                        <span class="keyword">END FOR</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="complete-example">
+                        <h4><i class="fas fa-code"></i> Contoh Program dengan Struktur Kontrol</h4>
+                        <div class="code-block x-large-code">
+                            <span class="comment">// Program mencari nilai terbesar dari 3 angka</span><br>
+                            <span class="keyword">BEGIN</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> a, b, c<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SET</span> terbesar = a<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> b > terbesar <span class="keyword">THEN</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SET</span> terbesar = b<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> c > terbesar <span class="keyword">THEN</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SET</span> terbesar = c<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Nilai terbesar: " + terbesar<br>
+                            <span class="keyword">END</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Contoh & Kesimpulan -->
+            <div class="slide" id="slide6">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">06</div>
+                        <h2>Contoh & Kesimpulan</h2>
+                    </div>
+
+                    <div class="simple-intro">
+                        <h3>Contoh Program Sederhana</h3>
+                        <p>Berikut beberapa contoh program sederhana menggunakan pseudocode.</p>
+                    </div>
+
+                    <div class="simple-examples">
+                        <div class="example-project">
+                            <h4><i class="fas fa-calculator"></i> Kalkulator Sederhana</h4>
+                            <div class="code-block x-large-code">
+                                <span class="comment">// Program kalkulator sederhana</span><br>
+                                <span class="keyword">BEGIN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> angka1<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> operator<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> angka2<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">CASE</span> operator <span class="keyword">OF</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+": hasil = angka1 + angka2<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"-": hasil = angka1 - angka2<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"*": hasil = angka1 * angka2<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/": <span class="keyword">IF</span> angka2 != 0 <span class="keyword">THEN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hasil = angka1 / angka2<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">ELSE</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Error: Pembagian dengan nol"<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">RETURN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">DEFAULT</span>: <span class="keyword">PRINT</span> "Operator tidak valid"<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END CASE</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Hasil: " + hasil<br>
+                                <span class="keyword">END</span>
+                            </div>
+                        </div>
+
+                        <div class="example-project">
+                            <h4><i class="fas fa-sort"></i> Program Sorting Sederhana</h4>
+                            <div class="code-block x-large-code">
+                                <span class="comment">// Program mengurutkan 3 angka</span><br>
+                                <span class="keyword">BEGIN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">INPUT</span> a, b, c<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Urutkan dengan bubble sort sederhana</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> a > b <span class="keyword">THEN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SWAP</span> a, b<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> b > c <span class="keyword">THEN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SWAP</span> b, c<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> a > b <span class="keyword">THEN</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">SWAP</span> a, b<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END IF</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> "Urutan: " + a + ", " + b + ", " + c<br>
+                                <span class="keyword">END</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Kesimpulan -->
+            <div class="slide" id="slide7">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">07</div>
+                        <h2>Kesimpulan</h2>
+                    </div>
+
+                    <div class="conclusion-section">
+                        <h3>Ringkasan Manfaat Pseudocode</h3>
+                        <p>Pseudocode memberikan banyak keuntungan dalam proses pengembangan perangkat lunak.</p>
+                    </div>
+
+                    <div class="conclusion-grid">
+                        <div class="conclusion-card">
+                            <div class="conclusion-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4>Fokus pada Logika</h4>
+                            <p>Memungkinkan programmer untuk berkonsentrasi pada alur logika program tanpa terdistraksi oleh sintaks bahasa pemrograman tertentu.</p>
+                        </div>
+
+                        <div class="conclusion-card">
+                            <div class="conclusion-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4>Kolaborasi Tim</h4>
+                            <p>Memudahkan komunikasi antar anggota tim development, bahkan yang menggunakan bahasa pemrograman berbeda.</p>
+                        </div>
+
+                        <div class="conclusion-card">
+                            <div class="conclusion-icon">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <h4>Debugging Efisien</h4>
+                            <p>Membantu mengidentifikasi kesalahan logika sejak dini, sebelum menulis kode aktual yang lebih kompleks.</p>
+                        </div>
+
+                        <div class="conclusion-card">
+                            <div class="conclusion-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <h4>Perencanaan yang Lebih Baik</h4>
+                            <p>Memberikan peta jalan yang jelas sebelum implementasi, mengurangi kemungkinan perubahan besar di tengah proses development.</p>
+                        </div>
+
+                        <div class="conclusion-card">
+                            <div class="conclusion-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h4>Alat Pembelajaran</h4>
+                            <p>Cocok untuk pemula yang ingin memahami konsep pemrograman tanpa terbebani sintaks yang rumit.</p>
+                        </div>
+
+                        <div class="conclusion-card">
+                            <div class="conclusion-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <h4>Portabilitas Tinggi</h4>
+                            <p>Dapat dengan mudah diterjemahkan ke berbagai bahasa pemrograman, membuatnya sangat fleksibel.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Penutup -->
+            <div class="slide" id="slide8">
+                <div class="slide-content large-content">
+                    <div class="slide-header">
+                        <div class="slide-number">08</div>
+                        <h2>Penutup</h2>
+                    </div>
+
+                    <div class="closing-section">
+                        <h3>Pseudocode: Jembatan Menuju Kode yang Lebih Baik</h3>
+                        <p>Pseudocode bukan hanya alat untuk pemula, tetapi juga praktik terbaik yang digunakan oleh programmer berpengalaman di seluruh dunia. Dengan menggunakan pseudocode, kita dapat merencanakan, menguji, dan menyempurnakan logika program sebelum menulis kode aktual.</p>
+                        
+                        <p>Ini menghemat waktu, mengurangi bug, dan memastikan bahwa solusi yang diimplementasikan sudah melalui proses pemikiran yang matang. Baik Anda seorang siswa, developer pemula, atau profesional, menguasai seni menulis pseudocode yang baik akan meningkatkan kualitas kode Anda secara signifikan.</p>
+                        
+                        <div class="thank-you">
+                            Terima Kasih
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> Sebelumnya
+            </button>
+            
+            <div class="slide-indicators" id="slideIndicators">
+                <!-- Indicators will be generated by JavaScript -->
+            </div>
+            
+            <button class="nav-btn" id="nextBtn">
+                Selanjutnya <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Inisialisasi particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 50, density: { enable: true, value_area: 800 } },
+                color: { value: "#6366f1" },
+                shape: { type: "circle" },
+                opacity: { value: 0.3, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#06b6d4",
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1.5,
+                    direction: "none",
+                    random: true,
+                    out_mode: "out"
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            }
+        });
+
+        // Slide Management
+        class Presentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.prevBtn = document.getElementById('prevBtn');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.slideIndicators = document.getElementById('slideIndicators');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+
+                this.init();
+            }
+
+            init() {
+                // Update slide counters
+                document.getElementById('current-slide').textContent = this.currentSlide + 1;
+                document.getElementById('total-slides').textContent = this.totalSlides;
+
+                // Create slide indicators
+                this.createIndicators();
+
+                // Add event listeners
+                this.prevBtn.addEventListener('click', () => this.previousSlide());
+                this.nextBtn.addEventListener('click', () => this.nextSlide());
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+
+                // Fullscreen functionality
+                document.getElementById('fullscreen-btn').addEventListener('click', () => this.toggleFullscreen());
+
+                // Create floating elements
+                this.createFloatingElements();
+
+                this.updateNavigation();
+            }
+
+            createIndicators() {
+                this.slideIndicators.innerHTML = '';
+                this.slides.forEach((_, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = `slide-indicator ${index === 0 ? 'active' : ''}`;
+                    indicator.addEventListener('click', () => this.goToSlide(index));
+                    this.slideIndicators.appendChild(indicator);
+                });
+            }
+
+            createFloatingElements() {
+                const container = document.getElementById('floating-elements');
+                const codeSnippets = [
+                    "BEGIN", "END", "IF", "THEN", "ELSE", "WHILE", 
+                    "FOR", "INPUT", "PRINT", "SET", "CALL", "RETURN"
+                ];
+
+                // Create floating code snippets
+                for (let i = 0; i < 15; i++) {
+                    const codeElement = document.createElement('div');
+                    codeElement.className = 'floating-code';
+                    codeElement.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                    codeElement.style.left = `${Math.random() * 100}%`;
+                    codeElement.style.top = `${Math.random() * 100}%`;
+                    codeElement.style.animationDelay = `${Math.random() * 20}s`;
+                    container.appendChild(codeElement);
+                }
+
+                // Create pulsing dots
+                for (let i = 0; i < 10; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'pulse-dot';
+                    dot.style.left = `${Math.random() * 100}%`;
+                    dot.style.top = `${Math.random() * 100}%`;
+                    dot.style.animationDelay = `${Math.random() * 3}s`;
+                    container.appendChild(dot);
+                }
+            }
+
+            goToSlide(slideIndex) {
+                if (slideIndex < 0 || slideIndex >= this.totalSlides) return;
+
+                // Hide current slide
+                this.slides[this.currentSlide].classList.remove('active');
+
+                // Show new slide
+                this.currentSlide = slideIndex;
+                this.slides[this.currentSlide].classList.add('active');
+
+                this.updateNavigation();
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides - 1) {
+                    this.goToSlide(this.currentSlide + 1);
+                }
+            }
+
+            previousSlide() {
+                if (this.currentSlide > 0) {
+                    this.goToSlide(this.currentSlide - 1);
+                }
+            }
+
+            updateNavigation() {
+                // Update buttons
+                this.prevBtn.disabled = this.currentSlide === 0;
+                this.nextBtn.disabled = this.currentSlide === this.totalSlides - 1;
+
+                // Update indicators
+                document.querySelectorAll('.slide-indicator').forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === this.currentSlide);
+                });
+
+                // Update slide counter
+                document.getElementById('current-slide').textContent = this.currentSlide + 1;
+            }
+
+            handleKeyboard(e) {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        this.previousSlide();
+                        break;
+                    case 'ArrowRight':
+                    case ' ':
+                        this.nextSlide();
+                        break;
+                    case 'Home':
+                        this.goToSlide(0);
+                        break;
+                    case 'End':
+                        this.goToSlide(this.totalSlides - 1);
+                        break;
+                }
+            }
+
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+        }
+
+        // Initialize presentation when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new Presentation();
+        });
+
+        // Add interactive effects to code blocks
+        document.addEventListener('DOMContentLoaded', () => {
+            const codeBlocks = document.querySelectorAll('.code-block');
+            codeBlocks.forEach(block => {
+                block.addEventListener('mouseenter', () => {
+                    block.style.transform = 'scale(1.02)';
+                    block.style.transition = 'transform 0.3s ease';
+                });
+                
+                block.addEventListener('mouseleave', () => {
+                    block.style.transform = 'scale(1)';
+                });
+            });
+
+            // Add animation to purpose cards
+            const purposeCards = document.querySelectorAll('.purpose-card-large');
+            purposeCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'slideIn 0.6s ease-out forwards';
+            });
+
+            // Add animation to conclusion cards
+            const conclusionCards = document.querySelectorAll('.conclusion-card');
+            conclusionCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'slideIn 0.6s ease-out forwards';
+            });
+        });
+    </script>
+</body>
+</html>
